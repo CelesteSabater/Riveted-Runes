@@ -1,0 +1,68 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 52b1015e9deeb7e218aa838c6f99986d, type: 3}
+  m_Name: Health
+  m_EditorClassIdentifier: 
+  _name: '@HealthConsiderationName'
+  _description: '@HealthConsiderationDescription'
+  _needsType: 0
+  _needsCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: -0.0012500003
+      outSlope: -0.0012500003
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 40
+      value: 0.95
+      inSlope: -0.005527162
+      outSlope: -0.005527162
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.15561646
+    - serializedVersion: 3
+      time: 77.49555
+      value: 0.506138
+      inSlope: -0.024361573
+      outSlope: -0.024361573
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.076867305
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 95
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 100
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4

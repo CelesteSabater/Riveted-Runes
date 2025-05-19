@@ -6,7 +6,7 @@ using RivetedRunes.Managers.TimeManager;
 namespace RivetedRunes.UtilityAI.Actions
 {
     [CreateAssetMenu(fileName = "SleepAction", menuName = "Utility AI/Actions/Needs/Sleep")]
-    public class Sleep : NeedsAction
+    public class Sleep : ContinuousNeedsAction
     {
         private void Start()
         {

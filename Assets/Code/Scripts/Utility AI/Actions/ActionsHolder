@@ -1,0 +1,14 @@
+using System;
+using UnityEngine;
+using RivetedRunes.Controllers;
+using Cysharp.Threading.Tasks;
+using RivetedRunes.UtilityAI.Stats;
+
+namespace RivetedRunes.UtilityAI.Actions
+{
+    public class ActionsHolder : MonoBehaviour
+    {
+        [SerializeField] private NPCAction[] _actions;
+        public NPCAction[] GetActions() => _actions;
+    }
+}

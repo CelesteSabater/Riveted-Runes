@@ -8,17 +8,16 @@ namespace RivetedRunes.UtilityAI.Stats.Needs
     [CreateAssetMenu(fileName = "ContinuousActionValue", menuName = "Utility AI/Considerations/Continuous Action Value")]
     public class ContinuousActionValue : Consideration
     {
-        [SerializeField] private float _durationEstimated;
         public override float ScoreConsideration(NPCController npc, NPCAction action)
         {
-            NeedsAction needsAction = action as NeedsAction;
+            ContinuousNeedsAction needsAction = action as ContinuousNeedsAction;
 
             if (needsAction ==  null)
                 return 0;
             
             float score = needsAction.GetNeedsScore();
 
-            return score * _durationEstimated / action.GetWorkRequired();
+            return score * needsAction.GetDurationEstimated() / needsAction.GetWorkRequired();
         }
     }
 }

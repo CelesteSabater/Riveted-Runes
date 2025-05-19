@@ -12,7 +12,6 @@ namespace RivetedRunes.UtilityAI
         [Tooltip("Time required in seconds.")]
         [SerializeField] private float _workRequired;
         private float _workPerformed;
-        [SerializeField] private bool _continuousAction;
         public Consideration[] _considerations;
 
         public float score
@@ -34,9 +33,7 @@ namespace RivetedRunes.UtilityAI
                 this._workPerformed = Mathf.Clamp(value, 0, _workRequired);
             }
         }
-
-        public bool GetContinuousAction() => _continuousAction;
-        public void SetContinuousAction(bool b) => _continuousAction = b;
+        
         public float GetWorkRequired() => _workRequired;
         private void Awake() {
             score = 0;

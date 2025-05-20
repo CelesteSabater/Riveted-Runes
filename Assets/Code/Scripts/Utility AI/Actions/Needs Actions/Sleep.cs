@@ -17,11 +17,17 @@ namespace RivetedRunes.UtilityAI.Actions
         public override void ExecuteAction(NPCController npc)
         {
             workPerformed += npc.GetWorkSpeed() * TimeManager.Instance.GetTime();
+            CheckIsComplete(npc);
         }
 
         public override void CompleteAction(NPCController npc)
         {
             npc.AddNeedsStatValue(GetNeedsType(), GetNeedsScore());
+            
+            NeedsStat energy = npc.GetNeedsStat(GetNeedsType());
+            if (energy == null) return;
+            if (energy.currentValue >= energy.maxValue)
+                npc.ResetBestAction();
         }
     }
 }

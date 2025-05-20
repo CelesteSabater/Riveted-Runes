@@ -21,31 +21,13 @@ namespace RivetedRunes.UtilityAI
         {
             return 1;
         }
-
-        public NeedsStat GetNeedsStat(NeedsStatType type)
-        {
-            NeedsStat stat = null;
-
-            for (int i = 0; i < _stats.Length; i++)
-            {   
-                stat = _stats[i] as NeedsStat;
-
-                if (stat == null)
-                    continue;
-
-                if (stat.GetNeedsType() == type)
-                    return stat;
-            }
-
-            return null;
-        }
-
+        
         public void AddNeedsStatValue(NeedsStatType type, float value)
         {
             NeedsStat stat = null;
 
             for (int i = 0; i < _stats.Length; i++)
-            {   
+            {
                 stat = _stats[i] as NeedsStat;
 
                 if (stat == null)
@@ -57,8 +39,29 @@ namespace RivetedRunes.UtilityAI
 
             if (stat == null)
                 return;
-            
+
             stat.currentValue += value;
+            
+            if (stat.currentValue > stat.maxValue) stat.currentValue = stat.maxValue;
+            if (stat.currentValue < 0) stat.currentValue = 0;
+        }
+
+        public NeedsStat GetNeedsStat(NeedsStatType type)
+        {
+            NeedsStat stat = null;
+
+            for (int i = 0; i < _stats.Length; i++)
+            {
+                stat = _stats[i] as NeedsStat;
+
+                if (stat == null)
+                    continue;
+
+                if (stat.GetNeedsType() == type)
+                    return stat;
+            }
+
+            return null;
         }
 
         public CoreStat GetCoreStat(CoreStatType type)

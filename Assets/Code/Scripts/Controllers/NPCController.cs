@@ -1,6 +1,7 @@
 using UnityEngine;
 using RivetedRunes.UtilityAI;
 using RivetedRunes.UtilityAI.Stats;
+using System.Threading.Tasks;
 
 namespace RivetedRunes.Controllers
 {
@@ -13,10 +14,12 @@ namespace RivetedRunes.Controllers
         {
             if (action == null) return;
             _bestAction = action;
-        } 
+        }
+
+        public void ResetBestAction() => _bestAction = null;
 
         public void SetName(string name) => _stats.SetName(name);
-        
+
         public float GetWorkSpeed() => _stats.GetWorkSpeed();
         public float GetWorkSpeed(SkillStat skillStat) => _stats.GetWorkSpeed(skillStat);
 
@@ -28,6 +31,24 @@ namespace RivetedRunes.Controllers
         void Start()
         {
             _stats = GetComponent<NPCStats>();
+        }
+
+        async Task Update()
+        {
+            await CheckBestAction();
+            ExecuteBestAction();
+        }
+
+        private async Task CheckBestAction()
+        {
+            if (_bestAction == null)
+                await AIBrain.Instance.DecideBestAction(this);
+            await UniTask.Yield();
+        }
+        private void ExecuteBestAction()
+        {
+            if (_bestAction != null)
+                _bestAction.Execute(this);
         }
     }
 }

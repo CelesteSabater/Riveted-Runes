@@ -6,40 +6,54 @@ namespace RivetedRunes.UtilityAI
 {
     public class AIBrain : Singleton<AIBrain>
     {
-        [SerializeField] private NPCAction[] _actionsAvailable;
-        public ref NPCAction[] GetActionsAvailable() => ref _actionsAvailable;
+        [SerializeField] private NPCAction[] _baseActionsAvailable;
+        private List<NPCAction> _actionsAvailable = new List<NPCAction>();
 
         public void DecideBestAction(NPCController npc)
         {
-            if (_actionsAvailable == null)
-                return;
-            
-            if (_actionsAvailable.Length == 0)
-                return;
-            
-            int bestActionIndex = 0;
-            float bestScore = 0f;
-
-            for(int i = 0; i < _actionsAvailable.Length; i++)
-            {
-                if (bestScore >= ScoreAction(npc, ref _actionsAvailable[i]))
-                    continue;
-                
-                bestActionIndex = i;    
-                bestScore = _actionsAvailable[i].score;        
-            }
-
-            npc.SetBestAction(_actionsAvailable[bestActionIndex]);
+            UpdateActionList();
+            SetBestAction(npc);
         }
 
-        public float ScoreAction(NPCController npc, ref NPCAction action)
+        private void UpdateActionList()
+        {
+            _actionsAvailable.Clear();
+            _actionsAvailable.AddRange(_baseActionsAvailable);
+            Interactable[] interactables = FindObjectsOfType(typeof(Interactable)) as Interactable[];
+            for(int i = 0; i < interactables.Length; i++)
+            {
+                _actionsAvailable.AddRange(interactables[i].GetActions());
+            }
+        }
+
+        private void SetBestAction(NPCController npc)
+        {             
+            if (_actionsAvailable.Count == 0)
+                return;
+            
+            NPCAction bestAction = null;
+            float bestScore = 0f;
+
+            foreach (NPCAction action in _actionsAvailable)
+            { 
+                if (bestScore >= ScoreAction(npc, ref action))
+                    continue;
+
+                bestAction = action;
+                bestScore = action.score;
+            }
+
+            npc.SetBestAction(bestAction);
+        }
+
+        private float ScoreAction(NPCController npc, ref NPCAction action)
         {
             float score = 1f;
 
-            for(int i = 0; i < action._considerations.Length; i++)
+            for (int i = 0; i < action._considerations.Length; i++)
             {
                 float considerationScore = action._considerations[i].ScoreConsideration(npc, action);
-                score *= considerationScore;  
+                score *= considerationScore;
                 if (score != 0)
                 {
                     action.score = score;

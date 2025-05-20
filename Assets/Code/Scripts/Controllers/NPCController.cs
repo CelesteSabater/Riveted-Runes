@@ -9,7 +9,11 @@ namespace RivetedRunes.Controllers
         private NPCAction _bestAction;
         private NPCStats _stats;
 
-        public void SetBestAction(NPCAction action) => _bestAction = action;
+        public void SetBestAction(NPCAction action)
+        {
+            if (action == null) return;
+            _bestAction = action;
+        } 
 
         public void SetName(string name) => _stats.SetName(name);
         

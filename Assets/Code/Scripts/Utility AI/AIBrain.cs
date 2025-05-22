@@ -1,6 +1,8 @@
 using UnityEngine;
 using RivetedRunes.Utils.Singleton;
+using Cysharp.Threading.Tasks;
 using RivetedRunes.Controllers;
+using System.Collections.Generic;
 
 namespace RivetedRunes.UtilityAI
 {
@@ -32,22 +34,23 @@ namespace RivetedRunes.UtilityAI
             if (actionsAvailable.Count == 0)
                 return;
             
-            NPCAction bestAction = null;
+            int bestAction = 0;
             float bestScore = 0f;
 
-            foreach (NPCAction action in actionsAvailable)
-            { 
+            for(int i = 0; i < actionsAvailable.Count; i++)
+            {
+                NPCAction action = actionsAvailable[i];
                 if (bestScore >= ScoreAction(npc, ref action))
                     continue;
 
-                bestAction = action;
+                bestAction = i;
                 bestScore = action.score;
             }
 
-            npc.SetBestAction(bestAction);
+            npc.SetBestAction(actionsAvailable[bestAction]);
         }
 
-        private void ScoreAction(NPCController npc, ref NPCAction action)
+        private float ScoreAction(NPCController npc, ref NPCAction action)
         {
             float score = 1f;
 

@@ -41,9 +41,9 @@ namespace RivetedRunes.UtilityAI
 
         public abstract void ExecuteAction(NPCController npc);
 
-        public void CheckIsComplete(NPCController npc))
+        public void CheckIsComplete(NPCController npc)
         {
-            if (workPerformed >= _workRequired)
+            if (_workPerformed >= _workRequired)
                 CompleteAction(npc);
         }
 

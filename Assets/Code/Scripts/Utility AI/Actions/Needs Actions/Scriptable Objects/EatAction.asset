@@ -9,15 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 458c5b523a68d183fa10ed992efc2e91, type: 3}
-  m_Name: SleepAction
+  m_Script: {fileID: 11500000, guid: 06dce42cb5a16f59b84baaed1e6178cd, type: 3}
+  m_Name: EatAction
   m_EditorClassIdentifier: 
-  _actionName: '@SleepActionName'
-  _actionDescription: '@SleepActionDescription'
-  _workRequired: 1
+  _actionName: '@EatActionName'
+  _actionDescription: '@EatActionDescription'
+  _workRequired: 5
   _considerations:
-  - {fileID: 11400000, guid: 40d9f5f916ce767d9871ebe9cb1e12fe, type: 2}
+  - {fileID: 11400000, guid: 77410db82e0fec8a299914dcbd338b84, type: 2}
   - {fileID: 11400000, guid: 1ee68a6c1bec3820ea6aab74f6edabc3, type: 2}
-  _durationEstimated: 200
-  _needsType: 3
-  _needsScore: 0.4
+  _needsType: 1
+  _needsScore: 80

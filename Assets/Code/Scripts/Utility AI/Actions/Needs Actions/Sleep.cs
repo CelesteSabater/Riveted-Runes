@@ -11,12 +11,11 @@ namespace RivetedRunes.UtilityAI.Actions
         private void Start()
         {
             SetNeedsType(NeedsStatType.energy);
-            SetContinuousAction(true);
         }
 
         public override void ExecuteAction(NPCController npc)
         {
-            workPerformed += npc.GetWorkSpeed() * TimeManager.Instance.GetTime();
+            workPerformed += WorkSpeedController.Instance.GetWorkSpeed(npc) * TimeManager.Instance.GetTime();
             CheckIsComplete(npc);
         }
 
@@ -26,7 +25,7 @@ namespace RivetedRunes.UtilityAI.Actions
             
             NeedsStat energy = npc.GetNeedsStat(GetNeedsType());
             if (energy == null) return;
-            if (energy.currentValue >= energy.maxValue)
+            if (energy.currentValue >= energy.GetMaxValue())
                 npc.ResetBestAction();
         }
     }

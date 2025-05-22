@@ -15,7 +15,7 @@ namespace RivetedRunes.UtilityAI.Actions
 
         public override void ExecuteAction(NPCController npc)
         {
-            workPerformed += npc.GetWorkSpeed() * TimeManager.Instance.GetTime();
+            workPerformed += WorkSpeedController.Instance.GetWorkSpeed(npc) * TimeManager.Instance.GetTime();
             CheckIsComplete(npc);
         }
 

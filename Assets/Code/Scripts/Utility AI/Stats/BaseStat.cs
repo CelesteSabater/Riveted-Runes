@@ -9,7 +9,9 @@ namespace RivetedRunes.UtilityAI.Stats
         [SerializeField] private string _statName;
         [SerializeField] private string _statDescription;
         [SerializeField] private float _minValue;
+        public float GetMinValue() => _minValue;
         [SerializeField] private float _maxValue;
+        public float GetMaxValue() => _maxValue;
         private float _currentValue;
         public float currentValue
         {

@@ -17,6 +17,7 @@ namespace RivetedRunes.UtilityAI.Stats
 
         public void SetSkillType(SkillStatType type) => _skillType = type;
         public SkillStatType GetSkillType() => _skillType;
+        public CoreStat GetCoreStat() => _coreStat;
         public override void ProcessStatChange()
         {
             GameEvents.current.SkillStatChange(_skillType, currentValue);

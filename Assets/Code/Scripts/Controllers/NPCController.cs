@@ -21,6 +21,7 @@ namespace RivetedRunes.Controllers
         public void SetName(string name) => _stats.SetName(name);
 
         public NeedsStat GetNeedsStat(NeedsStatType type) => _stats.GetNeedsStat(type);
+        public NeedsStat[] GetAllNeedsStat() => _stats.GetAllNeedsStat();
         public void AddNeedsStatValue(NeedsStatType type, float value) => _stats.AddNeedsStatValue(type, value);
         public CoreStat GetCoreStat(CoreStatType type) => _stats.GetCoreStat(type);
         public SkillStat GetSkillStat(SkillStatType type) => _stats.GetSkillStat(type);
@@ -41,6 +42,7 @@ namespace RivetedRunes.Controllers
             if (coreStat == null) return 0;
             return skillStat.GetMaxValue() + coreStat.GetMaxValue();
         } 
+        
         private bool _thinking = false;
 
         void Start()

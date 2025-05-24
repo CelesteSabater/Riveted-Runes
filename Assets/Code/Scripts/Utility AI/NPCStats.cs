@@ -42,13 +42,15 @@ namespace RivetedRunes.UtilityAI
 
             return null;
         }
+        
+        public NeedsStat[] GetAllNeedsStat() => _needsStats;
 
         public CoreStat GetCoreStat(CoreStatType type)
         {
             CoreStat stat = null;
-            
+
             for (int i = 0; i < _coreStats.Length; i++)
-            {   
+            {
                 if (stat == null)
                     continue;
 

@@ -8,6 +8,7 @@ using RivetedRunes.UI;
 using RivetedRunes.Disposable;
 using RivetedRunes.Systems.AudioSystem;
 using RivetedRunes.UtilityAI;
+using RivetedRunes.UtilityAI.Stats;
 
 namespace RivetedRunes.Other
 {
@@ -27,6 +28,7 @@ namespace RivetedRunes.Other
         [SerializeField] private GameObject _player;
         [SerializeField] private GameObject _enviorement;
         [SerializeField] private AIBrain _aiBrain;
+        [SerializeField] private StatDecayManager _statDecayManager;
 
         private int _currentStep, _maxSteps;
 
@@ -74,6 +76,7 @@ namespace RivetedRunes.Other
             _timeManager = Instantiate(_timeManager);
             _controlsManager = Instantiate(_controlsManager);
             _aiBrain = Instantiate(_aiBrain);
+            _statDecayManager = Instantiate(_statDecayManager);
 
             await UniTask.Yield();
         }

@@ -19,7 +19,8 @@ namespace RivetedRunes.UtilityAI.Stats.Needs
             if (stat == null)
                 return 0;
             
-            return _needsCurve.Evaluate(stat.currentValue);
+            float percentage = stat.currentValue / stat.GetMaxValue();
+            return _needsCurve.Evaluate(percentage);
         }
     }
 }

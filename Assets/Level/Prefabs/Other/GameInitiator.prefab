@@ -54,4 +54,5 @@ MonoBehaviour:
   _controlsManager: {fileID: 4303996449752283626, guid: a19a3cabf7629f01fab40cf673aba345, type: 3}
   _player: {fileID: 7038997677791233633, guid: 0a57acc76352befcf9a05ea9773ff0d4, type: 3}
   _enviorement: {fileID: 6868875458072322197, guid: b4dbb6fecc19791cbb59322b5a182b5a, type: 3}
-  _aiBrain: {fileID: 2582073549936003189, guid: 2a7258c113aeb8ba0b29e8ff836edc32, type: 3}
+  _aiBrain: {fileID: 2770964828212845484, guid: ee57a9fca282d5353bda16dceebdc559, type: 3}
+  _statDecayManager: {fileID: 1256371977509093398, guid: 92cc676de5fff85cd9879a4cc07f631d, type: 3}

@@ -12,11 +12,13 @@ namespace RivetedRunes.UtilityAI
     {
         public Interactable interactableObject;
         public NPCAction action;
+        public bool executeOnSelf;
 
-        public ActionableTarget(Interactable interactable, NPCAction action)
+        public ActionableTarget(Interactable interactable, NPCAction action, bool executeOnSelf)
         {
             this.interactableObject = interactable;
             this.action = action;
+            this.executeOnSelf = executeOnSelf;
         }
     }
 
@@ -24,26 +26,25 @@ namespace RivetedRunes.UtilityAI
     {
         [SerializeField] private NPCAction[] _baseActionsAvailable;
 
-        public async UniTask DecideBestAction(NPCController npc)
+        public void DecideBestAction(NPCController npc)
         {
             List<ActionableTarget> actionsAvailable = new();
             UpdateActionList(ref actionsAvailable);
             SetBestAction(npc, actionsAvailable);
-            await UniTask.Yield();
         }
 
         private void UpdateActionList(ref List<ActionableTarget> actionsAvailable)
         {
             actionsAvailable.Clear();
             for (int i = 0; i < _baseActionsAvailable.Length; i++)
-                actionsAvailable.Add(new ActionableTarget(null, _baseActionsAvailable[i]));
+                actionsAvailable.Add(new ActionableTarget(null, _baseActionsAvailable[i], true));
 
             Interactable[] interactables = FindObjectsOfType(typeof(Interactable)) as Interactable[];
             for (int i = 0; i < interactables.Length; i++)
             {
                 NPCAction[] actions = interactables[i].GetActions();
-                for (int j = 0; j < _baseActionsAvailable.Length; j++)
-                    actionsAvailable.Add(new ActionableTarget(interactables[i], _baseActionsAvailable[j]));
+                for (int j = 0; j < actions.Length; j++)
+                    actionsAvailable.Add(new ActionableTarget(interactables[i], actions[j], false));
             }
         }
 

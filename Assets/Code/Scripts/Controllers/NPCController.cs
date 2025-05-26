@@ -1,12 +1,9 @@
 using UnityEngine;
 using RivetedRunes.UtilityAI;
-using Cysharp.Threading.Tasks;
 using RivetedRunes.UtilityAI.Stats;
-using System.Threading.Tasks;
 using UnityEngine.AI;
 using RivetedRunes.Config;
-using Unity.VisualScripting;
-using System.Numerics;
+using RivetedRunes.Managers.TimeManager;
 
 namespace RivetedRunes.Controllers
 {
@@ -60,31 +57,33 @@ namespace RivetedRunes.Controllers
 
         void Update()
         {
-            _ = DoBestAction();
-            _ = StatDecayManager.Instance.DecayNeedsStats(this);
+            DoBestAction();
+            StatDecayManager.Instance.DecayNeedsStats(this);
         }
 
-        async UniTask DoBestAction()
+        private void DoBestAction()
         {
-            if (_thinking) return;
-
-            _thinking = true;
-
-            await CheckBestAction();
+            CheckBestAction();
             ExecuteBestAction();
-
-            _thinking = false;
         }
 
-        private async Task CheckBestAction()
+        private void CheckBestAction()
         {
             if (_currentActionTarget == null)
-                await AIBrain.Instance.DecideBestAction(this);
-            await UniTask.Yield();
+                AIBrain.Instance.DecideBestAction(this);
         }
         private void ExecuteBestAction()
         {
             if (_currentActionTarget == null) return;
+
+            if (_currentActionTarget.executeOnSelf)
+            {
+                ClearGoToPosition();
+                _currentActionTarget.action.ExecuteAction(this);
+                return;
+            }
+
+            if (_currentActionTarget.interactableObject == null) _currentActionTarget = null;
 
             float distance = UnityEngine.Vector3.Distance(_currentActionTarget.interactableObject.transform.position, this.transform.position);
 
@@ -95,19 +94,40 @@ namespace RivetedRunes.Controllers
                 ClearGoToPosition();
                 _currentActionTarget.action.ExecuteAction(this);
             }
-
         }
 
         private void GoToPosition(UnityEngine.Vector3 vector3)
         {
             if (!_agent) return;
+
             _agent.destination = vector3;
+
+            var dir = (_agent.steeringTarget - transform.position).normalized;
+            var animDir = transform.InverseTransformDirection(dir);
+
+            transform.rotation = UnityEngine.Quaternion.RotateTowards(transform.rotation, UnityEngine.Quaternion.LookRotation(dir), 180 * TimeManager.Instance.GetTime());
+
+            if (!_animator) return;
+            _animator.SetFloat("Horizontal", animDir.x, .5f, TimeManager.Instance.GetTime());
+            _animator.SetFloat("Vertical", animDir.z, .5f, TimeManager.Instance.GetTime());
         }
 
         private void ClearGoToPosition()
-        { 
+        {
             if (!_agent) return;
             _agent.ResetPath();
+
+            _animator.SetFloat("Horizontal", 0, .25f, TimeManager.Instance.GetTime());
+            _animator.SetFloat("Vertical", 0,  .25f, TimeManager.Instance.GetTime());
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (!_agent) return;
+            if (!_agent.hasPath) return;
+
+            for (int i = 0; i < _agent.path.corners.Length - 1; i++)
+                Debug.DrawLine(_agent.path.corners[i], _agent.path.corners[i + 1], Color.blue);
         }
     }
 }

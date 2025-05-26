@@ -44,14 +44,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e3e6c1ad2d1a175e6a0852c6a7c4bbd9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timeSpeeds:
+  _timeSpeeds:
+  - timeSpeed: 1
+    description: x1
   - timeSpeed: 0
     description: Pause
   - timeSpeed: 0.5
-    description: x 0.5
-  - timeSpeed: 1
-    description: x 1
+    description: x0.5
   - timeSpeed: 2
-    description: x 2
+    description: x2
   - timeSpeed: 4
-    description: x 4
+    description: x4

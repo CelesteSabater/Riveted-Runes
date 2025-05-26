@@ -19,7 +19,7 @@ namespace RivetedRunes.UtilityAI.Stats
     {
         [SerializeField] private NeedsDecayRate[] _needsDecayRate;
 
-        public async UniTask DecayNeedsStats(NPCController npc)
+        public void DecayNeedsStats(NPCController npc)
         {
             NeedsStat[] needs = npc.GetAllNeedsStat();
             for (int i = 0; i < needs.Length; i++)
@@ -30,8 +30,6 @@ namespace RivetedRunes.UtilityAI.Stats
                     needs[i].currentValue -= decay.decayRatePerSecond * TimeManager.Instance.GetTime();
                 }
             }
-
-            await UniTask.Yield();
         }
     }
 }

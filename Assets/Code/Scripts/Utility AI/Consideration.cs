@@ -12,16 +12,18 @@ namespace RivetedRunes.UtilityAI
         {
             get { return _score; }
 
-            set 
+            set
             {
                 this._score = Mathf.Clamp01(value);
             }
         }
 
-        private void Awake() {
+        private void Awake()
+        {
             score = 0;
         }
 
-        public abstract float ScoreConsideration(NPCController npc, NPCAction action);
+        public abstract float ScoreConsideration(NPCController npc, InteractableAction interactableAction);
+        public abstract float ScoreConsideration(NPCController npc, NPCAction interactableAction);
     }
 }

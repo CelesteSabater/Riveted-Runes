@@ -11,7 +11,7 @@ namespace RivetedRunes.UtilityAI
         private float _score;
         [Tooltip("Time required in seconds.")]
         [SerializeField] private float _workRequired;
-        private float _workPerformed;
+        private float _workPerformed = 0;
         public Consideration[] _considerations;
 
         public float score
@@ -26,7 +26,11 @@ namespace RivetedRunes.UtilityAI
 
         public float workPerformed
         {
-            get { return _workPerformed; }
+            get
+            {
+                if (float.IsNaN(_workPerformed)) return 0;
+                return _workPerformed;
+            }
 
             set 
             {
@@ -44,7 +48,10 @@ namespace RivetedRunes.UtilityAI
         public void CheckIsComplete(NPCController npc)
         {
             if (_workPerformed >= _workRequired)
+            {
                 CompleteAction(npc);
+                workPerformed = 0;
+            }
         }
 
         public abstract void CompleteAction(NPCController npc);

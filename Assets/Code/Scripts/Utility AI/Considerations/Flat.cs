@@ -9,9 +9,7 @@ namespace RivetedRunes.UtilityAI.Stats.Needs
         [Range(0, 1f)]
         [SerializeField] private float _value;
 
-        public override float ScoreConsideration(NPCController npc, NPCAction action)
-        {
-            return _value;
-        }
+        public override float ScoreConsideration(NPCController npc, InteractableAction interactableAction) => _value;
+        public override float ScoreConsideration(NPCController npc, NPCAction action) => _value;
     }
 }

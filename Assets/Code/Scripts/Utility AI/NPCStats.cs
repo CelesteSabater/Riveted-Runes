@@ -29,15 +29,10 @@ namespace RivetedRunes.UtilityAI
 
         public NeedsStat GetNeedsStat(NeedsStatType type)
         {
-            NeedsStat stat = null;
-
             for (int i = 0; i < _needsStats.Length; i++)
             {
-                if (stat == null)
-                    continue;
-
-                if (stat.GetNeedsType() == type)
-                    return stat;
+                if (_needsStats[i].GetNeedsType() == type)
+                    return _needsStats[i];
             }
 
             return null;
@@ -47,31 +42,21 @@ namespace RivetedRunes.UtilityAI
 
         public CoreStat GetCoreStat(CoreStatType type)
         {
-            CoreStat stat = null;
-
             for (int i = 0; i < _coreStats.Length; i++)
             {
-                if (stat == null)
-                    continue;
-
-                if (stat.GetCoreType() == type)
-                    return stat;
+                if (_coreStats[i].GetCoreType() == type)
+                    return _coreStats[i];
             }
 
             return null;
         }
 
         public SkillStat GetSkillStat(SkillStatType type)
-        {
-            SkillStat stat = null;
-            
+        {           
             for (int i = 0; i < _skillStats.Length; i++)
             {   
-                if (stat == null)
-                    continue;
-
-                if (stat.GetSkillType() == type)
-                    return stat;
+                if (_skillStats[i].GetSkillType() == type)
+                    return _skillStats[i];
             }
 
             return null;

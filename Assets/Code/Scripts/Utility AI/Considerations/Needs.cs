@@ -12,6 +12,16 @@ namespace RivetedRunes.UtilityAI.Stats.Needs
         [SerializeField] private NeedsStatType _needsType;
         [SerializeField] private AnimationCurve _needsCurve;
 
+        public override float ScoreConsideration(NPCController npc, InteractableAction interactableAction)
+        {
+            NeedsStat stat = npc.GetNeedsStat(_needsType);
+
+            if (stat == null)
+                return 0;
+
+            float percentage = stat.currentValue / stat.GetMaxValue();
+            return _needsCurve.Evaluate(percentage);
+        }
         public override float ScoreConsideration(NPCController npc, NPCAction action)
         {
             NeedsStat stat = npc.GetNeedsStat(_needsType);

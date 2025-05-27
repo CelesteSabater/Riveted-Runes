@@ -42,6 +42,8 @@ namespace RivetedRunes.Managers.TimeManager
             GameEvents.current.ChangeGameSpeed();
         }
 
+        public float GetTimeSpeed() => _timeSpeeds[_currentSpeed].timeSpeed;
+
         public float GetTime(bool ignoreCurrentSpeed = false)
         {
             if (ignoreCurrentSpeed)

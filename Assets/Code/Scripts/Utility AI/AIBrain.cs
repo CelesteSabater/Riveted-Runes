@@ -11,14 +11,21 @@ namespace RivetedRunes.UtilityAI
     public class ActionableTarget
     {
         public Interactable interactableObject;
-        public NPCAction action;
+        public NPCAction selfAction;
+        public InteractableAction interactableAction;
         public bool executeOnSelf;
 
-        public ActionableTarget(Interactable interactable, NPCAction action, bool executeOnSelf)
+        public ActionableTarget(Interactable interactable, InteractableAction interactableAction)
         {
             this.interactableObject = interactable;
-            this.action = action;
-            this.executeOnSelf = executeOnSelf;
+            this.interactableAction = interactableAction;
+            this.executeOnSelf = false;
+        }
+
+        public ActionableTarget(NPCAction action)
+        {
+            this.selfAction = action;
+            this.executeOnSelf = true;
         }
     }
 
@@ -37,14 +44,14 @@ namespace RivetedRunes.UtilityAI
         {
             actionsAvailable.Clear();
             for (int i = 0; i < _baseActionsAvailable.Length; i++)
-                actionsAvailable.Add(new ActionableTarget(null, _baseActionsAvailable[i], true));
+                actionsAvailable.Add(new ActionableTarget(_baseActionsAvailable[i]));
 
             Interactable[] interactables = FindObjectsOfType(typeof(Interactable)) as Interactable[];
             for (int i = 0; i < interactables.Length; i++)
             {
-                NPCAction[] actions = interactables[i].GetActions();
-                for (int j = 0; j < actions.Length; j++)
-                    actionsAvailable.Add(new ActionableTarget(interactables[i], actions[j], false));
+                InteractableAction[] interactableActions = interactables[i].GetActions();
+                for (int j = 0; j < interactableActions.Length; j++)
+                    actionsAvailable.Add(new ActionableTarget(interactables[i], interactableActions[j]));
             }
         }
 
@@ -58,15 +65,50 @@ namespace RivetedRunes.UtilityAI
 
             for (int i = 0; i < actionsAvailable.Count; i++)
             {
-                NPCAction action = actionsAvailable[i].action;
-                if (bestScore >= ScoreAction(npc, ref action))
-                    continue;
+                if (!actionsAvailable[i].executeOnSelf)
+                {
+                    InteractableAction interactableAction = actionsAvailable[i].interactableAction;
+                    if (bestScore >= ScoreAction(npc, ref interactableAction))
+                        continue;
 
-                bestAction = i;
-                bestScore = action.score;
+                    bestAction = i;
+                    bestScore = interactableAction.action.score;
+                }
+                else
+                {
+                    if (bestScore >= ScoreAction(npc, ref actionsAvailable[i].selfAction))
+                        continue;
+
+                    bestAction = i;
+                    bestScore = actionsAvailable[i].selfAction.score;
+                }
             }
 
             npc.SetBestAction(actionsAvailable[bestAction]);
+        }
+
+        private float ScoreAction(NPCController npc, ref InteractableAction interactableAction)
+        {
+            float score = 1f;
+
+            for (int i = 0; i < interactableAction.action._considerations.Length; i++)
+            {
+                float considerationScore = interactableAction.action._considerations[i].ScoreConsideration(npc, interactableAction);
+                score *= considerationScore;
+                if (score == 0)
+                {
+                    interactableAction.action.score = score;
+                    return interactableAction.action.score;
+                }
+            }
+
+            // MAGIC TRICK
+            float originalScore = score;
+            float modFactor = 1 - (1 / interactableAction.action._considerations.Length);
+            float makeupValue = (1 - originalScore) * modFactor;
+            interactableAction.action.score = originalScore + (makeupValue * originalScore);
+
+            return interactableAction.action.score;
         }
 
         private float ScoreAction(NPCController npc, ref NPCAction action)
@@ -77,7 +119,7 @@ namespace RivetedRunes.UtilityAI
             {
                 float considerationScore = action._considerations[i].ScoreConsideration(npc, action);
                 score *= considerationScore;
-                if (score != 0)
+                if (score == 0)
                 {
                     action.score = score;
                     return action.score;

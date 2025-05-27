@@ -14,7 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actionName: '@MineActionName'
   _actionDescription: '@MineActionDescription'
-  _workRequired: 50
+  _workRequired: 5
   _considerations:
   - {fileID: 11400000, guid: d57aa7331c6b024ba8dc4c6522a9d5c7, type: 2}
+  - {fileID: 11400000, guid: e27a3f681ef0335b3a586665312a2681, type: 2}
   _skillType: 0

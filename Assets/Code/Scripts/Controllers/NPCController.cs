@@ -13,6 +13,7 @@ namespace RivetedRunes.Controllers
         private NPCStats _stats;
         private NavMeshAgent _agent;
         private Animator _animator;
+        private Transform workSeat;
 
         public void SetBestAction(ActionableTarget target)
         {
@@ -20,7 +21,11 @@ namespace RivetedRunes.Controllers
             _currentActionTarget = target;
         }
 
-        public void ResetBestAction() => _currentActionTarget = null;
+        public void ResetBestAction()
+        { 
+            ReleaseWorkSeat();
+            _currentActionTarget = null;
+        } 
         public void SetName(string name) => _stats.SetName(name);
 
         public NeedsStat GetNeedsStat(NeedsStatType type) => _stats.GetNeedsStat(type);
@@ -46,13 +51,17 @@ namespace RivetedRunes.Controllers
             return skillStat.GetMaxValue() + coreStat.GetMaxValue();
         }
 
-        private bool _thinking = false;
-
         private void Start()
         {
             if (!_stats) _stats = GetComponent<NPCStats>();
             if (!_agent) _agent = GetComponent<NavMeshAgent>();
-            if (!_animator) _animator = GetComponentInChildren<Animator>();
+            if (!_animator) _animator = GetComponent<Animator>();
+
+            NeedsStat[] needs = GetAllNeedsStat();
+            for (int i = 0; i < needs.Length; i++)
+            {
+                needs[i].currentValue = needs[i].GetMaxValue();
+            }
         }
 
         void Update()
@@ -78,22 +87,59 @@ namespace RivetedRunes.Controllers
 
             if (_currentActionTarget.executeOnSelf)
             {
-                ClearGoToPosition();
-                _currentActionTarget.action.ExecuteAction(this);
+                ExecuteAction();
                 return;
             }
 
-            if (_currentActionTarget.interactableObject == null) _currentActionTarget = null;
+            ClaimWorkSeat();
 
-            float distance = UnityEngine.Vector3.Distance(_currentActionTarget.interactableObject.transform.position, this.transform.position);
+            if (workSeat == null) return;
 
-            if (distance >= GameVariables.INTERACTABLE_DISTANCE)
-                GoToPosition(_currentActionTarget.interactableObject.transform.position);
+            float distance = UnityEngine.Vector3.Distance(workSeat.position, this.transform.position);
+            if (distance < GameVariables.INTERACTABLE_DISTANCE)
+                ExecuteAction();
             else
+                GoToPosition(workSeat.position);
+        }
+
+        private void ClaimWorkSeat()
+        {
+            if (workSeat != null) return;
+            if (_currentActionTarget.executeOnSelf) return;
+            if (_currentActionTarget.interactableObject == null)
+                {
+                    ResetBestAction();
+                    return;
+                }
+
+            if (!_currentActionTarget.interactableAction.GetAvailableSeat())
             {
-                ClearGoToPosition();
-                _currentActionTarget.action.ExecuteAction(this);
+                ResetBestAction();
+                return;
             }
+
+            workSeat = _currentActionTarget.interactableAction.ClaimWorkSeat(this);
+            if (workSeat == null)
+            {
+                ResetBestAction();
+                return;
+            }
+        }
+
+        private void ReleaseWorkSeat()
+        {
+            if (workSeat == null) return;
+            if (_currentActionTarget.executeOnSelf) return;
+            _currentActionTarget.interactableAction.ReleaseWorkSeat(this);
+        }
+
+        private void ExecuteAction()
+        {
+            ClearGoToPosition();
+            if (_currentActionTarget.executeOnSelf)
+                _currentActionTarget.selfAction.ExecuteAction(this);
+            else
+                _currentActionTarget.interactableAction.action.ExecuteAction(this);
         }
 
         private void GoToPosition(UnityEngine.Vector3 vector3)
@@ -108,6 +154,7 @@ namespace RivetedRunes.Controllers
             transform.rotation = UnityEngine.Quaternion.RotateTowards(transform.rotation, UnityEngine.Quaternion.LookRotation(dir), 180 * TimeManager.Instance.GetTime());
 
             if (!_animator) return;
+            _animator.speed = TimeManager.Instance.GetTimeSpeed();
             _animator.SetFloat("Horizontal", animDir.x, .5f, TimeManager.Instance.GetTime());
             _animator.SetFloat("Vertical", animDir.z, .5f, TimeManager.Instance.GetTime());
         }
@@ -117,6 +164,11 @@ namespace RivetedRunes.Controllers
             if (!_agent) return;
             _agent.ResetPath();
 
+            var dir = (workSeat.position - transform.position).normalized;
+            transform.rotation = UnityEngine.Quaternion.RotateTowards(transform.rotation, UnityEngine.Quaternion.LookRotation(dir), 180 * TimeManager.Instance.GetTime());
+
+            if (!_animator) return;
+            _animator.speed = TimeManager.Instance.GetTimeSpeed();
             _animator.SetFloat("Horizontal", 0, .25f, TimeManager.Instance.GetTime());
             _animator.SetFloat("Vertical", 0,  .25f, TimeManager.Instance.GetTime());
         }

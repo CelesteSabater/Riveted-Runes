@@ -4,11 +4,15 @@ using RivetedRunes.UtilityAI.Stats;
 using UnityEngine.AI;
 using RivetedRunes.Config;
 using RivetedRunes.Managers.TimeManager;
+using TMPro;
+using UnityEngine.UI;
 
 namespace RivetedRunes.Controllers
 {
     public class NPCController : MonoBehaviour
     {
+        [SerializeField] TextMeshProUGUI _nameTag;
+        [SerializeField] Slider _workSlider;
         private ActionableTarget _currentActionTarget;
         private NPCStats _stats;
         private NavMeshAgent _agent;
@@ -24,6 +28,7 @@ namespace RivetedRunes.Controllers
         public void ResetBestAction()
         { 
             ReleaseWorkSeat();
+            _workSlider.gameObject.SetActive(false);
             _currentActionTarget = null;
         } 
         public void SetName(string name) => _stats.SetName(name);
@@ -56,6 +61,9 @@ namespace RivetedRunes.Controllers
             if (!_stats) _stats = GetComponent<NPCStats>();
             if (!_agent) _agent = GetComponent<NavMeshAgent>();
             if (!_animator) _animator = GetComponent<Animator>();
+
+            _nameTag.text = _stats.GetName();
+            _workSlider.gameObject.SetActive(false);
 
             NeedsStat[] needs = GetAllNeedsStat();
             for (int i = 0; i < needs.Length; i++)
@@ -130,16 +138,26 @@ namespace RivetedRunes.Controllers
         {
             if (workSeat == null) return;
             if (_currentActionTarget.executeOnSelf) return;
+            workSeat = null;
             _currentActionTarget.interactableAction.ReleaseWorkSeat(this);
         }
 
         private void ExecuteAction()
         {
+            _workSlider.gameObject.SetActive(true);
             ClearGoToPosition();
             if (_currentActionTarget.executeOnSelf)
+            {
+                if (_currentActionTarget.selfAction == null) return;
+                _workSlider.value = _currentActionTarget.selfAction.GetPercentage();
                 _currentActionTarget.selfAction.ExecuteAction(this);
+            }
             else
+            {
+                if (_currentActionTarget.interactableAction.action == null) return;
+                _workSlider.value = _currentActionTarget.interactableAction.action.GetPercentage();
                 _currentActionTarget.interactableAction.action.ExecuteAction(this);
+            }            
         }
 
         private void GoToPosition(UnityEngine.Vector3 vector3)

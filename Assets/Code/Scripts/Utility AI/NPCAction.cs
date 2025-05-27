@@ -39,7 +39,13 @@ namespace RivetedRunes.UtilityAI
         }
         
         public float GetWorkRequired() => _workRequired;
-        private void Awake() {
+        public float GetPercentage()
+        {
+            if (_workRequired == 0) return 0;
+            return _workPerformed / _workRequired;
+        } 
+        private void Awake()
+        {
             score = 0;
         }
 

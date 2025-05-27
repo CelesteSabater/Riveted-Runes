@@ -16,6 +16,7 @@ namespace RivetedRunes.UtilityAI.Stats.Needs
                 return 0;
 
             float score = needsAction.GetNeedsScore();
+            score /= 100;
 
             return score * needsAction.GetDurationEstimated() / needsAction.GetWorkRequired();
         }
